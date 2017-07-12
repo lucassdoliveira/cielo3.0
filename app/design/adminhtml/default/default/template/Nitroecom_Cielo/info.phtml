@@ -1,0 +1,57 @@
+<?php
+/**
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @title      Cielo pagamento com cartão de crédito (Brazil)
+ * @category   payment
+ * @package    Nitroecom_Cielo
+ * @copyright  Copyright (c) 2017 Nitroecom (https://www.nitroecom.com.br)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @author     Lucas Oliveira - Nitro e-com <www.nitroecom.com.br>
+ */
+
+?>
+
+<?php echo $this->__('Nome no cartão: %s', $this->htmlEscape($this->getName())) ?><br/>
+<?php echo $this->__('Bandeira do cartão: %s', $this->htmlEscape($this->getCcType())) ?><br/>
+<?php echo $this->__('Últimos quatro números do cartão: **** **** **** %s', $this->htmlEscape($this->getQuatroUltimosNumeros())) ?><br/>
+<?php echo $this->__('Data de expiração: %s', $this->htmlEscape($this->getValidade())) ?><br />
+<?php echo $this->__('Número de Parcelas: %s', $this->getParcelas()) ?><br/>
+
+<?php echo $this->__('Id da transação (TID): %s', $this->htmlEscape($this->getTid())) ?><br><br>
+
+<?php
+    $historico = $this->getXmlRetorno();
+
+    echo $this->__('<b>Retorno da Autorização</b>') . '<br>';
+    if(isset($historico['autorizacao_codigo'])):
+        echo $this->__('Código: %s', $historico['autorizacao_codigo']). '<br>';
+        echo $this->__('Mensagem: %s', $historico['autorizacao_mensagem']). '<br>';
+        //echo $this->__('LR: %s', $historico['autorizacao_lr']). '<br>';
+    else:
+        echo $this->__('Pagamento ainda não autorizado'). '<br>';
+    endif;
+
+    echo '<br>' . $this->__('<b>Retorno da captura</b>') . '<br>';
+    if(isset($historico['captura_codigo'])):
+        echo $this->__('Código: %s', $historico['captura_codigo']). '<br>';
+        echo $this->__('Mensagem: %s', $historico['captura_mensagem']). '<br>';
+    else:
+        echo $this->__('O pagamento ainda não foi capturado'). '<p>';
+    endif;
+
+    if(isset($historico['cancelamento_codigo'])):
+        echo '<br>' . $this->__('<b>Retorno do cancelamento</b>') . '<br>';
+        echo $this->__('Código: %s', $historico['cancelamento_codigo']). '<br>';
+        echo $this->__('Mensagem: %s', $historico['cancelamento_mensagem']). '<br>';
+    endif;
+
+   if($this->getEstornos()):
+       echo '<br>' . $this->__('<b>Esse pedido possui estornos. Verifique na aba "Credit Memos" a esquerda ou clique no botão abaixo para verificar o xml de retorno da cielo.</b>') . '<br>';
+   endif;
+?>

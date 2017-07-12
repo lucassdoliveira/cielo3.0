@@ -1,0 +1,107 @@
+<?php
+/**
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @title      Cielo pagamento com cartão de crédito (Brazil)
+ * @category   payment
+ * @package    Nitroecom_Cielo
+ * @copyright  Copyright (c) 2017 Nitroecom (https://www.nitroecom.com.br)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @author     Lucas Oliveira - Nitro e-com <www.nitroecom.com.br>
+ */
+
+?>
+
+<ul id="payment_form_nitrocielo" class="nitroecom_cielo form-list" style="display: none;">
+    <p>
+    <li><?php echo $this->getMensagem(); ?></li>
+
+    <li>
+        <input name="payment[bandeira_cielo]" type="hidden" id="" value="" class="radio_cielo">
+
+        <label for="nitrocielo_numero_cartao_cielo" class="required">
+            <em>*</em><?php echo $this->__('Número do Cartão de Crédito') ?>
+        </label>
+        <div class="input-box">
+            <input type="text" pattern="\d*" id="nitrocielo_numero_cartao_cielo" name="payment[numero_cartao_cielo]" title="<?php echo $this->__('Número do Cartão de Crédito') ?>" class="input-text required-entry validate-cc-number" value="" autocomplete="off">
+        </div>
+    </li>
+    
+    <li>
+        <label for="nitrocielo_portador_cielo" class="required">
+            <em>*</em><?php echo $this->__('Titular Cartão') ?>
+        </label>
+        <div class="input-box">
+            <input type="text" title="<?php echo $this->__('Titular Cartão') ?>" class="input-text name-card required-entry" id="nitrocielo_portador_cielo" name="payment[portador_cielo]" value="" autocomplete="off">
+        </div>
+    </li>
+
+    <li>
+        <label for="nitrocielo_expiracao_mes_cielo" class="required">
+            <em>*</em><?php echo $this->__('Data de Validade') ?>
+        </label>
+        <div class="input-box">
+            <div class="v-fix">
+                <select id="nitrocielo_expiracao_mes_cielo" name="payment[expiracao_mes_cielo]" class="required-entry">
+                    <?php foreach ($this->getCcMonths() as $k=>$v): ?>
+                        <option value="<?php echo $k?$k:'' ?>"><?php echo $v ?></option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+
+            <div class="v-fix">
+                <select id="nitrocielo_expiracao_ano_cielo" name="payment[expiracao_ano_cielo]" class="required-entry">
+                    <?php foreach ($this->getCcYears() as $k=>$v): ?>
+                        <option value="<?php echo $k?$k:'' ?>"><?php echo $v ?></option>
+                    <?php endforeach ?>
+                </select>
+            </div>
+        </div>
+    </li>
+
+    <li>
+        <label for="nitrocielo_codigo_seguranca_cielo" class="required">
+            <em>*</em><?php echo $this->__('Código de Segurança') ?>
+        </label>
+        <div class="input-box">
+            <div class="v-fix">
+                <input type="text" pattern="\d*" title="<?php echo $this->__('Código de Segurança') ?>" class="input-text required-entry" id="nitrocielo_codigo_seguranca_cielo" name="payment[codigo_seguranca_cielo]" value="" autocomplete="off">
+            </div>
+            <a href="#" class="cvv-what-is-this"><?php echo $this->__('O que é isso?') ?></a>
+        </div>
+    </li>
+
+    <li>
+        <label for="nitrocielo_parcelas_cielo" class="required">
+            <em>*</em><?php echo $this->__('Parcelas') ?>
+        </label>
+        <div class="input-box">
+            <span class="mes-cartao n-parcelas">
+                <select id="nitrocielo_parcelas_cielo" name="payment[parcelas_cielo]"></select>
+            </span>
+        </div>
+    </li>
+</ul>
+
+<script>
+    
+    //avida que os valores estão sendo atualizados
+    $('nitrocielo_parcelas_cielo').update('Calculando valores... Aguarde!');
+
+    //Cria uma insância do objeto js do módulo
+    var valor            = '<?php echo $this->getValorTotal(); ?>';
+    var parcelas         = '<?php echo $this->getMaximoParcelas(); ?>';
+    var juros            = '<?php echo $this->getJurosParcela(); ?>';
+    var parcelassemjuros = '<?php echo $this->getParcelassemJuros(); ?>';
+    var valorminimo      = '<?php echo $this->getValorMinimoParcela(); ?>';
+    var descontoavista   = '<?php echo $this->getDescontoaVista(); ?>';
+
+    $('nitrocielo_parcelas_cielo').update(
+        NitroecomCielo.getParcelasHtml(valor, parcelas, juros, parcelassemjuros,valorminimo,descontoavista)
+    );
+</script>

@@ -1,0 +1,261 @@
+<?xml version="1.0" ?>
+<!--
+
+NOTICE OF LICENSE
+
+This source file is subject to the Open Software License (OSL 3.0)
+that is available through the world-wide-web at this URL:
+http://opensource.org/licenses/osl-3.0.php
+
+@title      Cielo pagamento com cartão de crédito (Brazil)
+@category   payment
+@package    Nitroecom_Cielo
+@copyright  Copyright (c) 2017 Nitroecom (https://www.nitroecom.com.br)
+@license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+@author     Lucas Oliveira - Nitro e-com <www.nitroecom.com.br>
+-->
+
+<config>
+  <sections>
+    <payment>
+      <groups>
+        <nitrocielo translate="label">
+          <label>API Cielo 3.0 - Nitro e-com</label>
+          <sort_order>100</sort_order>
+          <show_in_default>1</show_in_default>
+          <show_in_website>1</show_in_website>
+          <show_in_store>1</show_in_store>
+          <comment>
+          <![CDATA[
+            <div class="comment">
+              <a href="https://www.nitroecom.com.br" target="_blank"><img title="Nitro e-com Tecnologia e-commerce" alt="Nitro e-com Tecnologia e-commerce" src="https://www.nitroecom.com.br/images/logo_nitroecom.png"></a></div>
+                        ]]>
+          </comment>
+          <fields>
+            <active translate="label">
+              <label>Enabled</label>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <sort_order>1</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </active>
+
+            <debug translate="label">
+              <label>Debug</label>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <comment>Atenção!! Ative somente para testes. Se ativado ele compromete a segurança do módulo, pois guarda os dados do cartão do cliente no log. O log é gravado na pasta /var/log. O log do magento é precisa estar ativado para que esse funcione.</comment>
+              <sort_order>1</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </debug>
+
+            <ambiente translate="label">
+              <label>Ambiente</label>
+              <frontend_type>select</frontend_type>
+              <source_model>Nitroecom_Cielo_Model_Source_Ambiente</source_model>
+              <sort_order>2</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </ambiente>
+
+            <title translate="label">
+              <label>Título</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>3</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <comment>
+                <![CDATA[
+							<div>
+							    Nome que irá aparecer para o cliente no checkout
+							</div>
+							]]>
+              </comment>
+            </title>
+
+            <order_status translate="label">
+              <label>Status dos novos pedidos</label>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_order_status_processing</source_model>
+              <sort_order>4</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </order_status>
+            
+            <merchant_id translate="label">
+              <label>Merchant Id</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>5</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </merchant_id>
+            
+            <merchant_key translate="label">
+              <label>Merchant Key</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>6</sort_order>
+              <comment>(Forncida pela cielo no momento da filiação)</comment>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </merchant_key>
+
+            <num_max_parc translate="label">
+              <label>Numero máximo de parcelas</label>
+              <frontend_type>select</frontend_type>
+              <sort_order>7</sort_order>
+              <source_model>Nitroecom_Cielo_Model_Source_NumMaxParc</source_model>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </num_max_parc>
+
+            <valor_minimo translate="label">
+              <label>Valor Mínimo</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>8</sort_order>
+              <comment>Valor mínimo da parcela</comment>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </valor_minimo>
+
+            <valor_desconto_avista translate="label">
+              <label>Desconto a vista em %</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>9</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <!--depends><desconto_avista>1</desconto_avista></depends-->
+              <comment>Essa opção funciona apenas quando o desconto à vista está ativado.</comment>
+            </valor_desconto_avista>
+
+            <texto_desconto_a_vista translate="label">
+              <label>Texto para desconto com pagamento em 1 parcela:</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>10</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <comment>Este texto será exibido para o cliente na página de sucesso e para o lojista na parte administrativa.</comment>
+            </texto_desconto_a_vista>
+
+            <juros_parcela translate="label">
+              <label>Juros na parcela</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>11</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <!--depends><desconto_avista>1</desconto_avista></depends-->
+              <comment>Se as vendas forem somente sem juros coloque 0.</comment>
+            </juros_parcela>
+
+            <parcelas_sem_juros translate="label">
+              <label>Parcelas sem juros</label>
+              <frontend_type>select</frontend_type>
+              <source_model>Nitroecom_Cielo_Model_Source_NumMaxParc</source_model>
+              <sort_order>12</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <comment>Número de parcelas sem juros. As demais terão o acrescimo do juros estipulado.</comment>
+            </parcelas_sem_juros>
+
+            <texto_juros translate="label">
+              <label>Texto para para especificação do juros:</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>13</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <comment>Este texto será exibido para o cliente no review da compra, página de sucesso e para o lojista na parte administrativa.</comment>
+            </texto_juros>
+
+            <max_parcelas translate="comment">
+                <label>Defina as faixas de valores para cada parcela</label>
+                <frontend_model>nitrocielo/parcelas</frontend_model>
+                <backend_model>adminhtml/system_config_backend_design_exception</backend_model>
+                <sort_order>14</sort_order>
+                <show_in_default>1</show_in_default>
+                <show_in_website>1</show_in_website>
+                <show_in_store>1</show_in_store>
+                <comment>Em caso de regras duplicadas, o sistema irá considerar apenas a primeira.</comment>
+            </max_parcelas>
+            
+            <max_parcelas_sem_juros translate="comment">
+                <label>Defina as faixas de valores para cada parcela sem juros</label>
+                <frontend_model>nitrocielo/parcelas</frontend_model>
+                <backend_model>adminhtml/system_config_backend_design_exception</backend_model>
+                <sort_order>15</sort_order>
+                <show_in_default>1</show_in_default>
+                <show_in_website>1</show_in_website>
+                <show_in_store>1</show_in_store>
+                <comment>Em caso de regras duplicadas, o sistema irá considerar apenas a primeira.</comment>
+            </max_parcelas_sem_juros>
+
+            <tipoparcelamento translate="label">
+              <label>Tipo de parcelamento</label>
+              <frontend_type>select</frontend_type>
+              <source_model>Nitroecom_Cielo_Model_Source_TipoParcelamento</source_model>
+              <sort_order>16</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+            </tipoparcelamento>
+
+            <payment_action translate="label">
+              <label>Fluxo do módulo</label>
+              <frontend_type>select</frontend_type>
+              <source_model>Nitroecom_Cielo_Model_Source_Fluxo</source_model>
+              <comment>Caso a opção Somente Autorize seja escolhida, o pedido deve ser capturado manualmente no admin em até 5 dias</comment>
+              <sort_order>17</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </payment_action>
+
+            <bandeiras translate="label">
+              <label>Habilitar bandeiras</label>
+              <frontend_type>multiselect</frontend_type>
+              <source_model>Nitroecom_Cielo_Model_Source_Bandeiras</source_model>
+              <sort_order>18</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+              <can_be_empty>1</can_be_empty>
+            </bandeiras>
+
+            <softdescriptor translate="label">
+              <label>Descrição a ser colocado na fatura</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>19</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+              <comment>Este campo deve conter no máximo 7 letras, sem espaço e caracteres especiais.</comment>
+            </softdescriptor>            
+
+            <sort_order translate="label">
+              <label>Sort order</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>23</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
+            </sort_order>
+          </fields>
+        </nitrocielo>
+      </groups>
+    </payment>
+  </sections>
+</config>

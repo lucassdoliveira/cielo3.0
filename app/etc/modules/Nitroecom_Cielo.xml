@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Nitroecom_Cielo>
+      <active>true</active>
+      <codePool>community</codePool>
+      <version>1.0.0</version>
+    </Nitroecom_Cielo>
+  </modules>
+</config>
