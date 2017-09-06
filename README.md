@@ -36,4 +36,4 @@ Checkout suportados
 Se você utiliza outro padrão de checkout diferente dos informados acima, sera necessario customizar o arquivo
 "app\design\frontend\ [TEMPLATE] \ [TEMA] \layout\Nitroecom_Cielo.xml" informando o block do seu checkout.
 
-# Para customizações ou suporte entre em contato com a Nitro e-com pelo e-mail suporte@nitroecom.com.br
+# Para customizações ou suporte entre em contato com a Nitro e-com pelo e-mail lucas@nitroecom.com.br
