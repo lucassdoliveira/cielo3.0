@@ -55,7 +55,7 @@ class Nitroecom_Cielo_Model_Cielo extends Mage_Core_Model_Abstract
                 $this->getMerchantId(),
                 $this->getMerchantKey()
             );
-
+            
             # Configure o SDK com seu merchant e o ambiente apropriado para criar a venda
             $retorno = new Cielo_API_CieloEcommerce(
                 $merchant,

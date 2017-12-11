@@ -59,4 +59,19 @@ http://opensource.org/licenses/osl-3.0.php
             </block>
         </reference>
     </onestepcheckout_index_index>
+
+    <!-- ONEPAGECHECKOUT -->
+    <onepagecheckout_index_index>
+        <reference name="head">
+            <action method="addCss"><stylesheet>css/nitroecom_cielo.css</stylesheet></action>
+            <action method="addItem"><type>skin_js</type><name>js/nitroecom.cielo.js</name></action>
+        </reference>
+                
+        <reference name="before_body_end">
+            <block type="page/html_head" name="extra_js" as="extraJs" after="-" template="page/html/jsnitro.phtml">
+                <action method="addItem"><type>js</type><name>cielo/card.js</name></action>
+                <action method="addItem"><type>js</type><name>cielo/form.js</name></action>
+            </block>
+        </reference>
+    </onepagecheckout_index_index>    
 </layout>

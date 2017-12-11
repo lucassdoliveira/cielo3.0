@@ -162,36 +162,58 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
             Mage::throwException(Mage::helper('payment')->__('O número do cartão digitado não é válido.'));
         else
         {
-            $ccTypeRegExp = '/^4[0-9]{12}([0-9]{3})?$/';
-            if (preg_match($ccTypeRegExp, $ccNumber) && $bandeira=='Visa')
-                $validado = true;
+            # VALIDA AS BANDEIRAS SELECIONADAS
+            switch ($bandeira)
+            {
+                case 'Visa':
+                    $ccTypeRegExp = '/^4[0-9]{12}([0-9]{3})?$/';
+                    $validado     = preg_match($ccTypeRegExp, $ccNumber);
+                    break;
 
-            $ccTypeRegExp = '/^5[1-5][0-9]{14}$/';
-            if (preg_match($ccTypeRegExp, $ccNumber) && $bandeira == 'Master')
-                $validado = true;
+                case 'Master':
+                    $ccTypeRegExp = '/^5[1-5][0-9]{14}$/';
+                    $validado     = preg_match($ccTypeRegExp, $ccNumber);
+                    break;
 
-            $ccTypeRegExp = '/^3[0,6,8]\d{12}$/';
-            if (preg_match($ccTypeRegExp, $ccNumber) && $bandeira == 'Diners')
-                $validado = true;
+                case 'Amex':
+                    $ccTypeRegExp = '/^3[47][0-9]{13}$/';
+                    $validado     = preg_match($ccTypeRegExp, $ccNumber);
+                    break;
 
-            $ccTypeRegExp = '/^6011[0-9]{12}$/';
-            if (preg_match($ccTypeRegExp, $ccNumber) && $bandeira == 'Discover')
-                $validado = true;
+                case 'Discover':
+                    $ccTypeRegExp = '/^6011[0-9]{12}$/';
+                    $validado     = preg_match($ccTypeRegExp, $ccNumber);
+                    break;
 
-            if ($bandeira=='Elo'||$bandeira=='Aura')
-                $validado = true;
+                case 'JCB':
+                    $ccTypeRegExp = '/^(3[0-9]{15}|(2131|1800)[0-9]{11})$/';
+                    $validado     = preg_match($ccTypeRegExp, $ccNumber);
+                    break;
 
-            $ccTypeRegExp = '/^3[47][0-9]{13}$/';
-            if (preg_match($ccTypeRegExp, $ccNumber) && $bandeira == 'Amex')
-                $validado = true;
+                case 'Diners':
+                    $ccTypeRegExp = '/^3[0,6,8]\d{12}$/';
+                    $validado     = preg_match($ccTypeRegExp, $ccNumber);
+                    break;
 
-            $ccTypeRegExp = '/^(3[0-9]{15}|(2131|1800)[0-9]{11})$/';
-            if (preg_match($ccTypeRegExp, $ccNumber) && $bandeira == 'JCB')
-                $validado = true;            
+                case 'elo':
+                    $validado = true;
+                    break;
+
+                case 'aura':
+                    $validado = true;
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
         }
 
+        if(Mage::getStoreConfig('payment/apelidocielo/debug'))
+            Mage::log('Numero Cartão: '.$ccNumber.' # Bandeira: '.$bandeira.' # Validado: '.$validado, null, 'nitrocielo.log');
+
         if(!$validado)
-            Mage::throwException(Mage::helper('payment')->__('O número do cartão de crédito não é válido para bandeira selecionada: ' . $bandeira));
+            Mage::throwException(Mage::helper('payment')->__('O número do cartão digitado não é válido'));
 
         return $this;
     }
@@ -362,7 +384,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
                               'message'    => (string) $pagamento->getReturnMessage(),
                               'tid'        => (string) $pagamento->getTid()));
 
-                Mage::throwException(Mage::helper('payment')->__('Transação não autorizada pela operadora. Entre em contato com a '.$bandeira));
+                Mage::throwException(Mage::helper('payment')->__('Transação não autorizada pela operadora. Entre em contato conosco'));
             }
             
             # TRANSAÇÃO FOI AUTORIZADA/CAPTURADA
