@@ -1,4 +1,4 @@
-<?php
+ <?php
 /**
  *
  * NOTICE OF LICENSE
@@ -14,16 +14,67 @@
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  * @author     Lucas Oliveira - Nitro e-com <www.nitroecom.com.br>
  */
-
 ?>
 
 <ul id="payment_form_nitrocielo" class="nitroecom_cielo form-list" style="display: none;">
-    <p>
     <li><?php echo $this->getMensagem(); ?></li>
 
-    <li>
+    <?php if(Mage::getStoreConfig('payment/nitrocielo/display_card')): ?>
         <input name="payment[bandeira_cielo]" type="hidden" id="" value="" class="radio_cielo">
-
+    <?php else: ?>
+        <li class="card-logo input-box">
+        <?php if(in_array('Visa',$this->getBandeiras())): ?>
+            <label for="nitrocielo_cartao_visa">
+                <input name="payment[bandeira_cielo]" type="radio" value="Visa" id="nitrocielo_cartao_visa" class="validate-one-required-by-name cartao16digitos">
+                <img src="<?php echo $this->getSkinUrl('images/nitrocielo/Visa.png'); ?>">
+            </label>
+        <?php endif; ?>
+        <?php if(in_array('Master',$this->getBandeiras())): ?>
+            <label for="nitrocielo_cartao_mastercard">
+                <input name="payment[bandeira_cielo]" type="radio" value="Master" id="nitrocielo_cartao_mastercard" class="validate-one-required-by-name cartao16digitos">
+                <img src="<?php echo $this->getSkinUrl('images/nitrocielo/Master.png'); ?>">
+            </label>
+        <?php endif; ?>
+        <?php if(in_array('Diners',$this->getBandeiras())): ?>
+            <label for="nitrocielo_cartao_diners">
+                <input name="payment[bandeira_cielo]" type="radio" value="Diners" id="nitrocielo_cartao_diners" class="validate-one-required-by-name">
+                <img src="<?php echo $this->getSkinUrl('images/nitrocielo/Diners.png'); ?>">
+            </label>
+        <?php endif; ?>
+        <?php if(in_array('Discover',$this->getBandeiras())): ?>
+            <label for="nitrocielo_cartao_discover">
+                <input name="payment[bandeira_cielo]" type="radio" value="Discover" id="nitrocielo_cartao_discover" class="validate-one-required-by-name cartao16digitos">
+                <img src="<?php echo $this->getSkinUrl('images/nitrocielo/Discover.png'); ?>">
+            </label>
+        <?php endif; ?>
+        <?php if(in_array('Elo',$this->getBandeiras())): ?>
+            <label for="nitrocielo_cartao_elo">
+                <input name="payment[bandeira_cielo]" type="radio" value="Elo" id="nitrocielo_cartao_elo" class="validate-one-required-by-name cartao16digitos">
+                <img src="<?php echo $this->getSkinUrl('images/nitrocielo/Elo.png'); ?>">
+            </label>
+        <?php endif; ?>
+        <?php if(in_array('Amex',$this->getBandeiras())): ?>
+            <label for="nitrocielo_cartao_amex">
+                <input name="payment[bandeira_cielo]" type="radio" value="Amex" id="nitrocielo_cartao_amex" class="validate-one-required-by-name">
+                <img src="<?php echo $this->getSkinUrl('images/nitrocielo/Amex.png'); ?>">
+            </label>
+        <?php endif; ?>
+        <?php if(in_array('JCB',$this->getBandeiras())): ?>
+            <label for="nitrocielo_cartao_jcb">
+                <input name="payment[bandeira_cielo]" type="radio" value="JCB" id="nitrocielo_cartao_jcb" class="validate-one-required-by-name cartao16digitos">
+                <img src="<?php echo $this->getSkinUrl('images/nitrocielo/Jcb.png'); ?>">
+            </label>
+        <?php endif; ?>
+        <?php if(in_array('Aura',$this->getBandeiras())): ?>
+            <label for="nitrocielo_cartao_aura">
+                <input name="payment[bandeira_cielo]" type="radio" value="Aura" id="nitrocielo_cartao_aura" class="validate-one-required-by-name">
+                <img src="<?php echo $this->getSkinUrl('images/nitrocielo/Aura.png'); ?>">
+            </label>
+        <?php endif; ?>
+    </li>
+    <?php endif; ?>
+    
+    <li>
         <label for="nitrocielo_numero_cartao_cielo" class="required">
             <em>*</em><?php echo $this->__('Número do Cartão de Crédito') ?>
         </label>
@@ -88,8 +139,15 @@
     </li>
 </ul>
 
-<script>
-    
+
+<script type="text/javascript">
+
+    /*
+    jQuery('input[name="payment[bandeira_cielo]"]').on('click', function (event) {
+        event.preventDefault();
+    });
+    */
+
     //avida que os valores estão sendo atualizados
     $('nitrocielo_parcelas_cielo').update('Calculando valores... Aguarde!');
 
@@ -104,4 +162,36 @@
     $('nitrocielo_parcelas_cielo').update(
         NitroecomCielo.getParcelasHtml(valor, parcelas, juros, parcelassemjuros,valorminimo,descontoavista)
     );
+
+    mascaraCartao = new MaskedInput('#nitrocielo_numero_cartao_cielo', '9999 9999 9999 9999');
+    mascaraCod    = new MaskedInput('#nitrocielo_codigo_seguranca_cielo', '999');
+
+    $$('.cartao16digitos').each(function(element) {
+        element.observe('click', function ()
+        {
+            mascaraCartao.unmask().mask('9999 9999 9999 9999');
+            mascaraCod.unmask().mask('999');
+        });
+    });
+    $$('#nitrocielo_cartao_amex').each(function(element) {
+        element.observe('click', function ()
+        {
+            mascaraCartao.unmask().mask('999999999999999');
+            mascaraCod.unmask().mask('9999');
+        });
+    });
+    $$('#nitrocielo_cartao_diners').each(function(element) {
+        element.observe('click', function ()
+        {
+            mascaraCartao.unmask().mask('99999999999999');
+            mascaraCod.unmask().mask('999');
+        });
+    });
+    $$('#nitrocielo_cartao_aura').each(function(element) {
+        element.observe('click', function ()
+        {
+            mascaraCartao.unmask().mask('9999999999999999999');
+            mascaraCod.unmask().mask('999');
+        });
+    });
 </script>

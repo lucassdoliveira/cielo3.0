@@ -1,1 +1,8 @@
-<?php echo $this->getCssJsHtml() ?>
+<script type="text/javascript">
+	var ID_FORM = "<?php echo Mage::getStoreConfig('payment/nitrocielo/form_id'); ?>";
+</script>
+
+<?php 
+	if(Mage::getStoreConfig('payment/nitrocielo/display_card'))
+		echo $this->getCssJsHtml();
+?>

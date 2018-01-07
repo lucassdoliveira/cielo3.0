@@ -1,13 +1,11 @@
 jQuery("#checkout-payment-method-load").bind("DOMNodeInserted DOMNodeRemoved", function() {
-
 	if (!jQuery("div").is(".card-wrapper")) {
 
 	    jQuery( "#payment_form_nitrocielo" ).prepend( "<div class='card-wrapper'></div>" );
 	    jQuery( "#payment_form_nitrocielo" ).append( "<input id='card-expiry' name='card-expiry' type='hidden' />" );
 	    
 	    var card = new Card({
-	        form: "form",
-			//form: "#co-payment-form",
+			form: ID_FORM,
 	        container: ".card-wrapper",
 	        formSelectors: {
 	            numberInput: "input#nitrocielo_numero_cartao_cielo",

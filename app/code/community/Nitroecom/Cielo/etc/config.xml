@@ -225,10 +225,12 @@
       <nitrocielo>
         <model>Nitroecom_Cielo_Model_Payment</model>
         <order_status>pending</order_status>
-        <active>1</active>
-        <payment_action>authorize_capture</payment_action>
-        <title>Pagamento por cartão de crédito</title>
-        <bandeiras>visa, mastercard</bandeiras>
+        <active>0</active>
+        <payment_action>authorize</payment_action>
+        <title>Cartão de crédito</title>
+        <display_card>1</display_card>
+        <form_id>#co-payment-form</form_id>
+        <bandeiras>Visa, Master</bandeiras>
         <ambiente>homologacao</ambiente>
         <merchant_id>daaec334-ac85-4c63-9564-f4a31be7b19b</merchant_id>
         <merchant_key>LTFYLLACRDYCIKMHTXBRVKGQYGDHOOVTCKGZUKRK</merchant_key>

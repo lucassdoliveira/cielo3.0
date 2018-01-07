@@ -19,6 +19,7 @@ http://opensource.org/licenses/osl-3.0.php
     <checkout_onepage_index>
         <reference name="head">
             <action method="addCss"><stylesheet>css/nitroecom_cielo.css</stylesheet></action>
+            <action method="addItem"><type>skin_js</type><name>js/prototype.maskedinput.js</name></action>
             <action method="addItem"><type>skin_js</type><name>js/nitroecom.cielo.js</name></action>
         </reference>
                 
