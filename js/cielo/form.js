@@ -23,7 +23,7 @@ function cieloTres() {
 	        },
 		    width: 350,			// Tamanho do cartão
 		    formatting: true,
-		    debug: true,
+		    debug: false,
 
 		    // Strings for translation - optional
 		    messages: {
