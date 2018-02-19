@@ -1,5 +1,5 @@
 # Módulo Integração Cielo API 3.0 Magento
-A <a href="https://www.nitroecom.com.br">Nitro e-com<a/> desenvolveu o módulo para Magento em código aberto para contribuir com a comunidade.
+Esse módulo para Magento em código aberto para contribuir com a comunidade.
 
 O Módulo segue os padrões da documentação oficial Cielo, que você pode encontrar <a href="https://developercielo.github.io/Webservice-3.0/">aqui</a>.
 
@@ -20,20 +20,12 @@ caso você esteja utilizando algum template, verifique para enviar os arquivos p
 "skin\frontend\ [TEMPLATE] \ [TEMA] \css"<br>
 "skin\frontend\ [TEMPLATE] \ [TEMA] \js"<br>
 
-
-Tambem verifique o #id do seu form no checkout, e altere em "js/cielo/form.js". Por padrão esta (form: 'form') conforme abaixo:<br>
-var card = new Card({<br>
-    // a selector or DOM element for the form where users will<br>
-    // be entering their information<br>
-    <b>form: 'form',</b>
-<p>
-
 Checkout suportados
 - Onestepcheckout6
 - Venda Mais
-- RWD
+- Padrão Magento
 
 Se você utiliza outro padrão de checkout diferente dos informados acima, sera necessario customizar o arquivo
 "app\design\frontend\ [TEMPLATE] \ [TEMA] \layout\Nitroecom_Cielo.xml" informando o block do seu checkout.
 
-# Para customizações ou suporte entre em contato com a Nitro e-com pelo e-mail lucas@nitroecom.com.br
+# ATENÇÃO: ESSE MÓDULO TEM O INTUITO DE AJUDAR A COMUNIDADE MAGENTO, NÃO NOS RESPONSABILIZAMOS POR EVENTUAIS PROBLEMAS QUE OCORRERAM DE COMPATIBILIDADE EM E-COMMERCE'S COM MODULOS DE TERCEIROS QUE GEREM CONFLITOS OU IMPEÇA O FUNCIONAMENTO DO PLUGIN. O MÓDULO É CODIGO ABERTO, CASO TENHAM PROBLEMAS PODEM FICAR A VONTADE DE POSTAR A SOLUÇÃO ENCONTRADA AQUI.
