@@ -75,7 +75,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
     {
         if (!($data instanceof Varien_Object))
             $data = new Varien_Object($data);
-        
+
         $info = $this->getInfoInstance();
 
         # zera os juros para evitar erros
@@ -103,7 +103,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
              ->setCcNumber($info->encrypt(str_replace(' ', '',$data->getNumeroCartaoCielo())));
 
         $parcela    = $data->getParcelasCielo();
-        $valorTotal = $info->getQuote()->getGrandTotal();       
+        $valorTotal = $info->getQuote()->getGrandTotal();
 
         # Verifica se tem juros e aplica no carrinho. Se o retorno do getJurosAmount for maior que 0, aplica no quote.
         $valorJuros    = Mage::helper('nitrocielo')->getJurosAmount($parcela,$valorTotal);
@@ -117,7 +117,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $info->getQuote()->getShippingAddress()->setJuros($valorJuros);
             $info->getQuote()->getShippingAddress()->setBaseJuros($valorJuros);
             $info->getQuote()->setTotalsCollectedFlag(false)->collectTotals();
-        } 
+        }
         else
         {
             $info->getQuote()->setJuros(0.0);
@@ -202,7 +202,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 case 'aura':
                     $validado = true;
                     break;
-                
+
                 default:
                     # code...
                     break;
@@ -245,7 +245,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 Mage::throwException(Mage::helper('payment')->__('Verifique o cadastro de Estado'));
 
             $region_entrega = $_read->fetchRow('SELECT * FROM '.Mage::getConfig()->getTablePrefix().'directory_country_region WHERE default_name = "'.$dadosEntrega->getRegion().'"');
-            
+
             if(!$region_entrega)
                Mage::throwException(Mage::helper('payment')->__('Verifique o cadastro de Estado'));
 
@@ -272,7 +272,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
                 $emaildigitado      = $dadosCliente->getEmail();
                 $nomedigitado       = $dadosCliente->getFirstname() . ' ' . $dadosCliente->getLastname();
-                
+
                 $enderecodigitadoa  = array($dadosEndereco->getStreet(1),
                                             $dadosEndereco->getStreet(2),
                                             $dadosEndereco->getStreet(3),
@@ -303,7 +303,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
                                                         $enderecodigitadoa[1]
                                                         $enderecodigitadoa[2]
                                                         $enderecodigitadoa[3]
-                            Cidade:                     $cidadedigitado                            
+                            Cidade:                     $cidadedigitado
                             Estado:                     $estadodigitado
                             Uf:                         $ufdigitado
                             Telefone:                   $telefonedigitado
@@ -312,12 +312,12 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
             # DADOS DO PEDIDO
             $sale = new Cielo_API_Sale($increment_id);
-            
+
             # DADOS DO CLIENTE
             $customer = $sale->customer($dadosCliente->getFirstname().' '.$dadosCliente->getLastname())
                                 ->setEmail($dadosCliente->getEmail())
                                 ->setBirthDate($data_nasc);
-            
+
             # DADOS DE ENDEREÇO
             $customer->address()->setStreet($dadosEndereco->getStreet(1))
                                     ->setNumber($dadosEndereco->getStreet(2))
@@ -326,11 +326,11 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
                                     ->setCity($dadosEndereco->getCity())
                                     ->setState($region_endereco['code'])
                                     ->setCountry('BRA');
-            
+
             # DADOS DE ENTREGA
             if(!$dadosEntrega)
                 $dadosEntrega = $dadosEndereco;
-            
+
             $customer->deliveryAddress()->setStreet($dadosEntrega->getStreet(1))
                                             ->setNumber($dadosEntrega->getStreet(2))
                                             ->setComplement($dadosEntrega->getStreet(3))
@@ -338,7 +338,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
                                             ->setCity($dadosEntrega->getCity())
                                             ->setState($region_entrega['code'])
                                             ->setCountry('BRA');
-            
+
             # CRIA INSTANCIA DO PAGAMENTO
             $pagamento = $sale->payment($vl_total, $parcelas);
 
@@ -351,16 +351,16 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
                         ->setExpirationDate($validade)
                         ->setCardNumber($numcart)
                         ->setHolder($titular);
-            
+
             # ENVIA AS INFORMAÇÕES PARA INTEGRAÇÃO CIELO
             $cielo = Mage::getModel('nitrocielo/cielo');
             $cielo->setEnvironment();
-            
+
             $retorno = $cielo->setAutorizacao($sale);
-           
+
             # Recebe os dados de pagamento da CIELO
             $pagamento = $retorno->getPayment();
-            
+
             if(!$pagamento->getPaymentId() || !$pagamento->getTid())
             {
                 # Grava no log do módulo
@@ -372,7 +372,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
                 Mage::throwException(Mage::helper('payment')->__('Problemas no pagamento via Cartão de Crédito, Você ainda pode selecionar uma outra forma de pagamento'));
             }
-            
+
             # VALIDA A AUTORIZAÇÃO/CAPTURA DA TRANSAÇÃO
             if($pagamento->getStatus()!== 1 && $pagamento->getStatus()!== 2 && $pagamento->getStatus()!== 12)
             {
@@ -386,15 +386,15 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
                 Mage::throwException(Mage::helper('payment')->__('Transação não autorizada pela operadora. Entre em contato conosco'));
             }
-            
+
             # TRANSAÇÃO FOI AUTORIZADA/CAPTURADA
             Mage::dispatchEvent('nitrocielo',
                     array('payment_id'=> (string) $pagamento->getPaymentId(),
                           'codigo'    => (string) $pagamento->getReturnCode(),
                           'status'    => (string) $pagamento->getStatus(),
                           'message'   => (string) $pagamento->getReturnMessage(),
-                          'tid'       => (string) $pagamento->getTid()));            
-            
+                          'tid'       => (string) $pagamento->getTid()));
+
             # Atribui os valores
             $payment->setCcTransId($pagamento->getTid());
             $payment->setQuotePaymentId($pagamento->getPaymentId());
@@ -444,7 +444,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         if(!$this->canCapture())
            Mage::throwException(Mage::helper('payment')->__('Esse pedido não pode ser capturado.'));
-        
+
         # ENVIA AS INFORMAÇÕES PARA INTEGRAÇÃO CIELO
         $cielo = Mage::getModel('nitrocielo/cielo');
         $cielo->setEnvironment();
@@ -483,15 +483,15 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
     public function cancelamento($observer)
     {
-        
-        $payment     = $observer->getEvent()->getPayment();
-        $$payment_id = $payment->getQuotePaymentId();
+
+        $payment = $observer->getEvent()->getPayment()->getOrder();
+        $payment_id = $payment->getQuotePaymentId();
         $valor       = number_format($payment->getAmountAuthorized(), 2, '', '');
 
         # Caso o pedido não tenha sido finalizado pelo módulo cielo
         if($payment->getMethod() != 'nitrocielo')
             return true;
-        
+
         # ENVIA AS INFORMAÇÕES PARA INTEGRAÇÃO CIELO
         $cielo = Mage::getModel('nitrocielo/cielo');
         $cielo->setEnvironment();
