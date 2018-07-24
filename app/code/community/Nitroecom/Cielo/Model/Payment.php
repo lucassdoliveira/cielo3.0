@@ -209,7 +209,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
             }
         }
 
-        if(Mage::getStoreConfig('payment/apelidocielo/debug'))
+        if(Mage::getStoreConfig('payment/nitrocielo/debug'))
             Mage::log('Numero Cartão: '.$ccNumber.' # Bandeira: '.$bandeira.' # Validado: '.$validado, null, 'nitrocielo.log');
 
         if(!$validado)
@@ -229,7 +229,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
             Mage::throwException(Mage::helper('payment')->__('O valor para autorização deve ser maior que zero'));
         else
         {
-            $debug = Mage::getStoreConfig('payment/apelidocielo/debug');
+            $debug = Mage::getStoreConfig('payment/nitrocielo/debug');
             $info  = $this->getInfoInstance();
 
             # define as variáveisCcType
