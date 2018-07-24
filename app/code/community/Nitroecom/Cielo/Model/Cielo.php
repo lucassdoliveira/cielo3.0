@@ -70,7 +70,7 @@ class Nitroecom_Cielo_Model_Cielo extends Mage_Core_Model_Abstract
             // os códigos de erro estão todos disponíveis no manual de integração.
             $error = $e->getCieloError();
 
-            if(Mage::getStoreConfig('payment/apelidocielo/debug'))
+            if(Mage::getStoreConfig('payment/nitrocielo/debug'))
                 Mage::log('Cartão: '.$error->getCode().' '.$error->getMessage(), null, 'nitrocielo.log');
 
             //throw new Exception($error->getCode().' - '.$error->getMessage());
@@ -102,7 +102,7 @@ class Nitroecom_Cielo_Model_Cielo extends Mage_Core_Model_Abstract
             // os códigos de erro estão todos disponíveis no manual de integração.
             $error = $e->getCieloError();
 
-            if(Mage::getStoreConfig('payment/apelidocielo/debug'))
+            if(Mage::getStoreConfig('payment/nitrocielo/debug'))
                 Mage::log('Cartão: '.$error->getCode().' '.$error->getMessage(), null, 'nitrocielo.log');
 
             Mage::throwException(Mage::helper('payment')->__($error->getCode().' - '.$error->getMessage()));
@@ -133,7 +133,7 @@ class Nitroecom_Cielo_Model_Cielo extends Mage_Core_Model_Abstract
             // os códigos de erro estão todos disponíveis no manual de integração.
             $error = $e->getCieloError();
 
-            if(Mage::getStoreConfig('payment/apelidocielo/debug'))
+            if(Mage::getStoreConfig('payment/nitrocielo/debug'))
                 Mage::log('Cartão: '.$error->getCode().' '.$error->getMessage(), null, 'nitrocielo.log');
 
             Mage::throwException(Mage::helper('payment')->__($error->getCode().' - '.$error->getMessage()));
