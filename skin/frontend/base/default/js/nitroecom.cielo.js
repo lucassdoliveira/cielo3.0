@@ -104,19 +104,3 @@ var NitroecomCielo = {
         return '';
     }
 }
-
-//limpa os dados do cartão em caso de erro
-Event.observe(window, 'load', function() {
-    document.observe('click', function(e, el) {
-      if (el = e.findElement('.btn-checkout')) {
-        // coloquei esse timeout para evitar erros na hora que o magento buscar os dados do cartão
-          setTimeout(function(){
-                $('nitrocielo_numero_cartao_cielo').setValue('');
-                $('nitrocielo_portador_cielo').setValue('');
-                $('nitrocielo_expiracao_mes_cielo').setValue('');
-                $('nitrocielo_expiracao_ano_cielo').setValue('');
-                $('nitrocielo_codigo_seguranca_cielo').setValue('');
-              }, 3000);
-      }
-    });
-});
