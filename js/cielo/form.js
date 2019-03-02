@@ -1,4 +1,12 @@
-jQuery("#checkout-payment-method-load").bind("DOMNodeInserted DOMNodeRemoved", function() {
+jQuery(document).on('DOMNodeInserted DOMNodeRemoved', '#checkout-payment-method-load', function () {
+	cieloTres();
+});
+
+jQuery(document).ready(function(){
+	cieloTres();
+});
+
+function cieloTres() {
 	if (!jQuery("div").is(".card-wrapper")) {
 
 	    jQuery( "#payment_form_nitrocielo" ).prepend( "<div class='card-wrapper'></div>" );
