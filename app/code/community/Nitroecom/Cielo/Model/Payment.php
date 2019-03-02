@@ -484,8 +484,8 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
     public function cancelamento($observer)
     {
         
-        $payment     = $observer->getEvent()->getPayment();
-        $$payment_id = $payment->getQuotePaymentId();
+        $payment     = $observer->getEvent()->getPayment()->getOrder();
+        $payment_id  = $payment->getQuotePaymentId();
         $valor       = number_format($payment->getAmountAuthorized(), 2, '', '');
 
         # Caso o pedido não tenha sido finalizado pelo módulo cielo
