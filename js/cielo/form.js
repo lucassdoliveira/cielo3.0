@@ -1,14 +1,10 @@
-jQuery(document).on('DOMNodeInserted DOMNodeRemoved', '#checkout-payment-method-load', function () {
-	cieloTres();
-});
+jQuery(document).on('DOMNodeInserted DOMNodeRemoved', '#checkout-payment-method-load', function () { cieloTres(); });
+jQuery(document).ready(function(){ cieloTres() });
 
-jQuery(document).ready(function(){
-	cieloTres();
-});
-
-function cieloTres() {
-	if (!jQuery("div").is(".card-wrapper")) {
-
+function cieloTres()
+{
+	if (!jQuery("div").is(".card-wrapper"))
+	{
 	    jQuery( "#payment_form_nitrocielo" ).prepend( "<div class='card-wrapper'></div>" );
 	    jQuery( "#payment_form_nitrocielo" ).append( "<input id='card-expiry' name='card-expiry' type='hidden' />" );
 	    
@@ -58,4 +54,4 @@ function cieloTres() {
 	        jQuery(".jp-card-expiry").addClass("jp-card-focused");
 	    });
 	}
-});
+}
