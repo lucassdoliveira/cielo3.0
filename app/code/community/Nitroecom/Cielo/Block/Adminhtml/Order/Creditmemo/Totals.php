@@ -37,6 +37,7 @@ class Nitroecom_Cielo_Block_Adminhtml_Order_Creditmemo_Totals extends Mage_Admin
                     'base_value' => $this->getSource()->getBaseJuros(),
                     'label'      => Mage::getStoreConfig('payment/nitrocielo/texto_juros'),
                     'area'       => 'footer')), 'grand_total');
+            return $this;
         }
 
         if ($this->getSource()->getDesconto()<0)
@@ -48,9 +49,9 @@ class Nitroecom_Cielo_Block_Adminhtml_Order_Creditmemo_Totals extends Mage_Admin
                     'base_value' => $this->getSource()->getBaseDesconto(),
                     'label'      => Mage::getStoreConfig('payment/nitrocielo/texto_desconto_a_vista'),
                     'area'       => 'footer',)), 'grand_total');
+            return $this;
         }
 
-        return $this;
     }
 }
 

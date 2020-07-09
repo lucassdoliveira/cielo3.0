@@ -35,28 +35,16 @@ class Nitroecom_Cielo_Model_Quote_Address_Juros extends Mage_Sales_Model_Quote_A
     public function collect(Mage_Sales_Model_Quote_Address $address)
     {
         parent::collect($address);
+        $items = $this->_getAddressItems($address);
+        if (!count($items)) {
+            return $this;
+        }
 
         if ($address->getData('address_type')=='billing')
             return $this;
-
-        $paymentMethodOK = ($address->getQuote()->getPayment()->getMethod() == 'nitrocielo');
-        $parcelasOK      = ($address->getQuote()->getPayment()->getAdditionalData() != 1);
-        $ammount         = $address->getQuote()->getJuros();
-
-        if($ammount > 0 && $ammount != null && $parcelasOK && $paymentMethodOK)
-        {
-            $this->_setBaseAmount($ammount);
-            $this->_setAmount($address->getQuote()->getStore()->convertPrice($ammount, false));
-
-            $address->setJuros($ammount);
-            $address->setBaseJuros($ammount);
-        }
-        else
-        {
-            $this->_setBaseAmount(0.00);
-            $this->_setAmount(0.00);
-        }
-
+        
+        $this->_addAmount('juros');
+        $this->_addBaseAmount('juros');
         return $this;
     }
 
@@ -68,12 +56,17 @@ class Nitroecom_Cielo_Model_Quote_Address_Juros extends Mage_Sales_Model_Quote_A
      */
     public function fetch(Mage_Sales_Model_Quote_Address $address)
     {
-        if($address->getJuros()!=0)
+        $paymentMethodOK = ($address->getQuote()->getPayment()->getMethod() == 'nitrocielo');
+        $parcelasOK      = ($address->getQuote()->getPayment()->getAdditionalData() != 1);
+        $ammount         = $address->getQuote()->getJuros();
+
+        if($address->getJuros()!=0 && $ammount > 0 && $ammount != null && $parcelasOK && $paymentMethodOK)
         {
             $address->addTotal(array (  'code' => $this->getCode(),
                                         'title' => Mage::getStoreConfig('payment/nitrocielo/texto_juros'),
-                                        'value' => $address->getJuros() ));
+                                        'value' =>  $ammount  ));
         }
+        return $this;
     }
 }
 

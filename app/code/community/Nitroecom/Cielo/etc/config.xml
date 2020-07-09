@@ -106,7 +106,7 @@
       </sales>
       <adminhtml>
         <rewrite>
-          <sales_order_totals>Nitroecom_Cielo_Block_Adminhtml_Order_Totals</sales_order_totals>
+          <sales_order_totals>Nitroecom_Cielo_Block_Sales_Order_Totals</sales_order_totals>
           <sales_order_invoice_totals>Nitroecom_Cielo_Block_Adminhtml_Order_Invoice_Totals</sales_order_invoice_totals>
           <sales_order_creditmemo_totals>Nitroecom_Cielo_Block_Adminhtml_Order_Creditmemo_Totals</sales_order_creditmemo_totals>
         </rewrite>
@@ -117,13 +117,13 @@
         <totals>
           <juros>
             <class>nitrocielo/quote_address_juros</class>
-            <after>shipping</after>
-            <before>grand_total</before>
+            <after>subtotal</after>
+            <before>tax</before>
           </juros>
           <desconto>
             <class>nitrocielo/quote_address_desconto</class>
-            <after>shipping</after>
-            <before>grand_total</before>
+            <after>subtotal</after>
+            <before>tax</before>
           </desconto>
         </totals>
       </quote>
@@ -131,13 +131,13 @@
         <totals>
           <juros>
             <class>nitrocielo/order_invoice_juros</class>
-            <after>shipping</after>
-            <before>grand_total</before>
+            <after>subtotal</after>
+            <before>tax</before>
           </juros>
           <desconto>
             <class>nitrocielo/order_invoice_desconto</class>
-            <after>shipping</after>
-            <before>grand_total</before>
+            <after>subtotal</after>
+            <before>tax</before>
           </desconto>
         </totals>
       </order_invoice>
@@ -145,13 +145,13 @@
         <totals>
           <juros>
             <class>nitrocielo/order_creditmemo_juros</class>
-            <after>shipping</after>
-            <before>grand_total</before>
+            <after>subtotal</after>
+            <before>tax</before>
           </juros>
           <desconto>
             <class>nitrocielo/order_creditmemo_desconto</class>
-            <after>shipping</after>
-            <before>grand_total</before>
+            <after>subtotal</after>
+            <before>tax</before>
           </desconto>
         </totals>
       </order_creditmemo>

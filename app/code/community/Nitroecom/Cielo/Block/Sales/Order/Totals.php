@@ -34,7 +34,8 @@ class Nitroecom_Cielo_Block_Sales_Order_Totals extends Mage_Sales_Block_Order_To
                             'code'  => 'juros',
                             'field' => 'juros',
                             'value' => $this->getSource()->getJuros(),
-                            'label' => Mage::getStoreConfig('payment/nitrocielo/texto_juros'))), 'grand_total');
+                            'label' => Mage::getStoreConfig('payment/nitrocielo/texto_juros'))), 'tax');
+            return $this;
         }
 
         if($this->getSource()->getDesconto()<0)
@@ -43,10 +44,10 @@ class Nitroecom_Cielo_Block_Sales_Order_Totals extends Mage_Sales_Block_Order_To
                             'code'  => 'desconto',
                             'field' => 'desconto',
                             'value' => $this->getSource()->getDesconto(),
-                            'label' => Mage::getStoreConfig('payment/nitrocielo/texto_desconto_a_vista'))), 'grand_total');
+                            'label' => Mage::getStoreConfig('payment/nitrocielo/texto_desconto_a_vista'))), 'tax');
+            return $this;
         }
 
-        return $this;
     }
 }
 

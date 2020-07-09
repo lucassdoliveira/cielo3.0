@@ -8,6 +8,5 @@
 .nitroecom_cielo .card-logo li img { width: 60px; }
 
 .nitroecom_cielo .card-logo li input[type="checkbox"], input[type="radio"] {
-	display: block;
 	margin: 0 0 5px 25px;
 }

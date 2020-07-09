@@ -17,21 +17,24 @@
 
 class Nitroecom_Cielo_Model_Source_Bandeiras
 {
-        public function toOptionArray ()
-        {
-                $options = array();
-        
-                $options[] = array('value' => 'Visa', 'label' => Mage::helper('adminhtml')->__('Visa'));
-                $options[] = array('value' => 'Master', 'label' => Mage::helper('adminhtml')->__('Mastercard'));
-                $options[] = array('value' => 'Diners', 'label' => Mage::helper('adminhtml')->__('Diners Club'));
-                $options[] = array('value' => 'Discover', 'label' => Mage::helper('adminhtml')->__('Discover'));
-                $options[] = array('value' => 'Elo', 'label' => Mage::helper('adminhtml')->__('Elo'));
-                $options[] = array('value' => 'Amex', 'label' => Mage::helper('adminhtml')->__('Amex'));
-                $options[] = array('value' => 'JCB', 'label' => Mage::helper('adminhtml')->__('JCB'));
-                $options[] = array('value' => 'Aura', 'label' => Mage::helper('adminhtml')->__('Aura'));
-        
-                return $options;
-        }
+    public function toOptionArray ()
+    {
+        $options = array();
+
+        $options[] = array('value' => 'Visa', 'label' => Mage::helper('adminhtml')->__('Visa'));
+        $options[] = array('value' => 'Master', 'label' => Mage::helper('adminhtml')->__('Mastercard'));
+        $options[] = array('value' => 'Amex', 'label' => Mage::helper('adminhtml')->__('Amex'));
+        $options[] = array('value' => 'Elo', 'label' => Mage::helper('adminhtml')->__('Elo'));
+        $options[] = array('value' => 'Aura', 'label' => Mage::helper('adminhtml')->__('Aura'));
+        $options[] = array('value' => 'JCB', 'label' => Mage::helper('adminhtml')->__('JCB'));
+        $options[] = array('value' => 'Diners', 'label' => Mage::helper('adminhtml')->__('Diners Club'));
+        $options[] = array('value' => 'Discover', 'label' => Mage::helper('adminhtml')->__('Discover'));
+        $options[] = array('value' => 'Amex', 'label' => Mage::helper('adminhtml')->__('Amex'));
+        $options[] = array('value' => 'Hipercard', 'label' => Mage::helper('adminhtml')->__('Hipercard'));
+        $options[] = array('value' => 'Hiper', 'label' => Mage::helper('adminhtml')->__('Hiper'));
+
+        return $options;
+    }
 }
 
 ?>
