@@ -29,7 +29,6 @@ class Nitroecom_Cielo_Model_Source_Bandeiras
         $options[] = array('value' => 'JCB', 'label' => Mage::helper('adminhtml')->__('JCB'));
         $options[] = array('value' => 'Diners', 'label' => Mage::helper('adminhtml')->__('Diners Club'));
         $options[] = array('value' => 'Discover', 'label' => Mage::helper('adminhtml')->__('Discover'));
-        $options[] = array('value' => 'Amex', 'label' => Mage::helper('adminhtml')->__('Amex'));
         $options[] = array('value' => 'Hipercard', 'label' => Mage::helper('adminhtml')->__('Hipercard'));
         $options[] = array('value' => 'Hiper', 'label' => Mage::helper('adminhtml')->__('Hiper'));
 
