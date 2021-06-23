@@ -26,10 +26,8 @@ http://opensource.org/licenses/osl-3.0.php
           <show_in_website>1</show_in_website>
           <show_in_store>1</show_in_store>
           <comment>
-          <![CDATA[
-            <div class="comment">
-              <a href="https://www.nitroecom.com.br" target="_blank"><img title="Nitro e-com Tecnologia e-commerce" alt="Nitro e-com Tecnologia e-commerce" src="https://www.nitroecom.com.br/images/logo_nitroecom.png"></a></div>
-                        ]]>
+          <![CDATA[<div class="comment">
+              <a href="https://loja.nitroecom.com.br" target="_blank"><img title="Nitro e-com Tecnologia e-commerce" alt="Nitro e-com Tecnologia e-commerce" src="https://loja.nitroecom.com.br/skin/frontend/nitroecom/one/images/logo.png"></a><h3>Módulo Integração Cielo API 3.0 Magento</h3><br>Para contratar a Suporte do Módulo em sua loja, acesse <a href="https://loja.nitroecom.com.br/instalacao-modulo-cielo-api-3-0-magento" rel="nofollow">aqui</a><br></div>]]>
           </comment>
           <fields>
             <active translate="label">
@@ -73,7 +71,7 @@ http://opensource.org/licenses/osl-3.0.php
             <order_status translate="label">
               <label>Status dos novos pedidos</label>
               <frontend_type>select</frontend_type>
-              <source_model>adminhtml/system_config_source_order_status_processing</source_model>
+              <source_model>adminhtml/system_config_source_order_status</source_model>
               <sort_order>5</sort_order>
               <show_in_default>1</show_in_default>
               <show_in_website>1</show_in_website>
@@ -254,10 +252,29 @@ http://opensource.org/licenses/osl-3.0.php
               <show_in_store>1</show_in_store>
               <comment>Este campo deve conter no máximo 7 letras, sem espaço e caracteres especiais.</comment>
             </softdescriptor>
+            <allowspecific translate="label">
+                <label>Payment from Applicable Countries</label>
+                <frontend_type>allowspecific</frontend_type>
+                <sort_order>50</sort_order>
+                <source_model>adminhtml/system_config_source_payment_allspecificcountries</source_model>
+                <show_in_default>1</show_in_default>
+                <show_in_website>1</show_in_website>
+                <show_in_store>0</show_in_store>
+            </allowspecific>
+            <specificcountry translate="label">
+                <label>Payment from Specific Countries</label>
+                <frontend_type>multiselect</frontend_type>
+                <sort_order>51</sort_order>
+                <source_model>adminhtml/system_config_source_country</source_model>
+                <show_in_default>1</show_in_default>
+                <show_in_website>1</show_in_website>
+                <show_in_store>0</show_in_store>
+                <can_be_empty>1</can_be_empty>
+            </specificcountry>
             <sort_order translate="label">
               <label>Ordem Exibição</label>
               <frontend_type>text</frontend_type>
-              <sort_order>23</sort_order>
+              <sort_order>52</sort_order>
               <show_in_default>1</show_in_default>
               <show_in_website>1</show_in_website>
               <show_in_store>1</show_in_store>
