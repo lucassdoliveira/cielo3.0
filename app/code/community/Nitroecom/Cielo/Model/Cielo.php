@@ -71,10 +71,10 @@ class Nitroecom_Cielo_Model_Cielo extends Mage_Core_Model_Abstract
             $error = $e->getCieloError();
 
             if(Mage::getStoreConfig('payment/nitrocielo/debug'))
-                Mage::log('Cartão: '.$error->getCode().' '.$error->getMessage(), null, 'nitrocielo.log');
+                Mage::log('Error : '.$error->getMessage(), null, 'nitrocielo.log');
 
             //throw new Exception($error->getCode().' - '.$error->getMessage());
-            Mage::throwException(Mage::helper('payment')->__($error->getCode().' - '.$error->getMessage()));
+            Mage::throwException(Mage::helper('payment')->__($error->getMessage()));
         }
     }
 
@@ -103,9 +103,9 @@ class Nitroecom_Cielo_Model_Cielo extends Mage_Core_Model_Abstract
             $error = $e->getCieloError();
 
             if(Mage::getStoreConfig('payment/nitrocielo/debug'))
-                Mage::log('Cartão: '.$error->getCode().' '.$error->getMessage(), null, 'nitrocielo.log');
+                Mage::log('Error: '.$error->getMessage(), null, 'nitrocielo.log');
 
-            Mage::throwException(Mage::helper('payment')->__($error->getCode().' - '.$error->getMessage()));
+            Mage::throwException(Mage::helper('payment')->__($error->getMessage()));
         }
     }
 
@@ -113,6 +113,9 @@ class Nitroecom_Cielo_Model_Cielo extends Mage_Core_Model_Abstract
     {
         try
         {
+            if(!$this->environment)
+                $this->setEnvironment();
+            
             # Configure seu merchant
             $merchant = new Cielo_Merchant(
                 $this->getMerchantId(),
@@ -134,12 +137,43 @@ class Nitroecom_Cielo_Model_Cielo extends Mage_Core_Model_Abstract
             $error = $e->getCieloError();
 
             if(Mage::getStoreConfig('payment/nitrocielo/debug'))
-                Mage::log('Cartão: '.$error->getCode().' '.$error->getMessage(), null, 'nitrocielo.log');
+                Mage::log('Erro: '.$error->getMessage(), null, 'nitrocielo.log');
 
-            Mage::throwException(Mage::helper('payment')->__($error->getCode().' - '.$error->getMessage()));
+            Mage::throwException(Mage::helper('payment')->__($error->getMessage()));
         }
     }
+    
+    public function getTransacao($paymentId)
+    {
+        try
+        {
+            # Configure seu merchant
+            $merchant = new Cielo_Merchant(
+                $this->getMerchantId(),
+                $this->getMerchantKey()
+            );
 
+            # Chama a função de cancelamento do pagamento dopedido
+            $retorno = new Cielo_API_CieloEcommerce(
+                $merchant,
+                $this->environment
+            );
+
+            return $retorno->getSale($paymentId);
+        }
+        catch(Cielo_API_CieloRequestException $e)
+        {
+            // Em caso de erros de integração, podemos tratar o erro aqui.
+            // os códigos de erro estão todos disponíveis no manual de integração.
+            $error = $e->getCieloError();
+
+            if(Mage::getStoreConfig('payment/nitrocielo/debug'))
+                Mage::log('Error: '.$error->getMessage(), null, 'nitrocielo.log');
+
+            Mage::throwException(Mage::helper('payment')->__($error->getMessage()));
+        }
+    }
+    
     public function getMerchantId()
     {
         return $this->merchant_id;
