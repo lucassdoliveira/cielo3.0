@@ -60,17 +60,14 @@
       <sales_order_payment_cancel>
         <!-- identifier of the event we want to catch -->
         <observers>
-          <sales_order_payment_cancel_handler>
+          <order_cancel_after>
             <!-- identifier of the event handler -->
             <type>model</type>
             <!-- class method call type; valid are model, object and singleton -->
             <class>nitrocielo/payment</class>
             <!-- observers class alias -->
             <method>cancelamento</method>
-            <!-- observer's method to be called -->
-            <args></args>
-            <!-- additional arguments passed to observer -->
-          </sales_order_payment_cancel_handler>
+          </order_cancel_after>
         </observers>
       </sales_order_payment_cancel>
       <sales_order_creditmemo_refund>
