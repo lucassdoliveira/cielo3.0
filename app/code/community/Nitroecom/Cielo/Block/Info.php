@@ -46,10 +46,12 @@ class Nitroecom_Cielo_Block_Info extends Mage_Payment_Block_Info
         return $this->getInfo()->getCcLast4();
     }
 
-    public function getXmlRetorno()
+    public function getXmlRetorno($val=null)
     {
         $retorno = $this->getInfo()->getAdditionalInformation();
-
+        if($val)
+            return isset($retorno[$val])?$retorno[$val]:null;
+        
         return $retorno;
     }
 
@@ -70,7 +72,7 @@ class Nitroecom_Cielo_Block_Info extends Mage_Payment_Block_Info
 
     public  function getUrlxml()
     {
-        return Mage::helper("adminhtml")->getUrl('backendcielo/admin/xmlcielo', array('tid' => $this->getTid()));
+        return Mage::helper("adminhtml")->getUrl('backendcielo/admin/xmlcielo', array('payment_id' => $this->getXmlRetorno('payment_id')));
     }
 }
 
