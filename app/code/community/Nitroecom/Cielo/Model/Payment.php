@@ -35,8 +35,8 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
     //Can capture partial amounts online?
     //===================================
-    protected $_canCapturePartial       = false;
-    protected $_canCancelInvoice        = false;
+    protected $_canCapturePartial       = true;
+    protected $_canCancelInvoice        =  true;
 
     //Can refund online?
     //==================
@@ -63,7 +63,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
     //========================================================
     protected $_canSaveCc               = false;
     protected $_isInitializeNeeded      = false;
-    protected $_canReviewPayment        = false; // changed PJS to true
+    protected $_canReviewPayment        = true; // changed PJS to true
 
     /**=====================================
      * Assign data to info model instance
@@ -260,19 +260,26 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $_read = Mage::getSingleton('core/resource')->getConnection('core_read');
             $region_endereco = $_read->fetchRow('SELECT * FROM '.Mage::getConfig()->getTablePrefix().'directory_country_region WHERE default_name = "'.$dadosEndereco->getRegion().'"');
 
-            if(!$region_endereco)
-                Mage::throwException(Mage::helper('payment')->__('Verifique o cadastro de Estado'));
+            $cod_entrega = $cod_endereco = null;
+
+            if(isset($region_endereco['code']) && $region_endereco['code'] != '' ){
+                $cod_endereco = $region_endereco['code'];
+            }
+
 
             $region_entrega = $_read->fetchRow('SELECT * FROM '.Mage::getConfig()->getTablePrefix().'directory_country_region WHERE default_name = "'.$dadosEntrega->getRegion().'"');
             
-            if(!$region_entrega)
-               Mage::throwException(Mage::helper('payment')->__('Verifique o cadastro de Estado'));
+            if(isset($region_entrega['code']) && $region_entrega['code'] != '' ){
+                $cod_entrega = $region_entrega['code'];
+            }
 
             $data_nasc = '';
             if($dadosCliente->getDob())
                 $data_nasc = $this->formatDob($dadosCliente->getDob());
 
             $vl_total = number_format($amount,2,'','');
+
+            $currency = Mage::app()->getStore()->getCurrentCurrencyCode();
 
             $bandeira = $info->getCcType();
             $numcart  = $info->decrypt($info->getCcNumber());
@@ -299,36 +306,37 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
                 $cidadedigitado     = $dadosEndereco->getCity();
                 $estadodigitado     = $dadosEndereco->getRegion();
-                $ufdigitado         = $region_endereco['code'];
+                $ufdigitado         = $cod_endereco;
                 $telefonedigitado   = $dadosCliente->getTelephone();
                 $cepdigitado        = $dadosEndereco->getPostcode();
+                $countryId          = $dadosEndereco->getCountryId();
 
+                if(Mage::getStoreConfig('payment/nitrocielo/debug')){
+                    # Esse log só funciona se a opção Ativar log em Developer > Log no admin estiver marcada
+                    Mage::log(  "===========   Dados do pagamento sendo enviados para autorizacao   ==========
+                                Id do pedido:               $increment_id
+                                Bandeira do cartao:         $bandeira
+                                Portador do cartao:         $titular
+                                Valor do pagamento:         $vl_total
+                                Quantidade de parcelas:     $parcelas
+                                Id da quote:                $quoteId
 
-                # Esse log só funciona se a opção Ativar log em Developer > Log no admin estiver marcada
-                Mage::log(  "===========   Dados do pagamento sendo enviados para autorizacao   ==========
-                            Id do pedido:               $increment_id
-                            Bandeira do cartao:         $bandeira
-                            Portador do cartao:         $titular
-                            Valor do pagamento:         $vl_total
-                            Quantidade de parcelas:     $parcelas
-                            Id da quote:                $quoteId
+                                -------------------------------------------------------------------------------
+                                DADOS PREENCHIDOS PELO CLIENTE NO CHECKOUT
 
-                            -------------------------------------------------------------------------------
-                            DADOS PREENCHIDOS PELO CLIENTE NO CHECKOUT
-
-                            e-mail:                     $emaildigitado
-                            Nome:                       $nomedigitado
-                            Endereco:                   $enderecodigitadoa[0]
-                                                        $enderecodigitadoa[1]
-                                                        $enderecodigitadoa[2]
-                                                        $enderecodigitadoa[3]
-                            Cidade:                     $cidadedigitado                            
-                            Estado:                     $estadodigitado
-                            Uf:                         $ufdigitado
-                            Telefone:                   $telefonedigitado
-                            CEP:                        $cepdigitado" ,null, 'nitrocielo.log');
+                                e-mail:                     $emaildigitado
+                                Nome:                       $nomedigitado
+                                Endereco:                   $enderecodigitadoa[0]
+                                                            $enderecodigitadoa[1]
+                                                            $enderecodigitadoa[2]
+                                                            $enderecodigitadoa[3]
+                                Cidade:                     $cidadedigitado                            
+                                Estado:                     $estadodigitado
+                                Uf:                         $ufdigitado
+                                Telefone:                   $telefonedigitado
+                                CEP:                        $cepdigitado" ,null, 'nitrocielo.log');
+                }
             }
-
             # DADOS DO PEDIDO
             $sale = new Cielo_API_Sale($increment_id);
             
@@ -343,8 +351,8 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
                                     ->setComplement($dadosEndereco->getStreet(3))
                                     ->setZipCode(Zend_Filter::filterStatic($dadosEndereco->getPostcode(), 'Digits'))
                                     ->setCity($dadosEndereco->getCity())
-                                    ->setState($region_endereco['code'])
-                                    ->setCountry('BRA');
+                                    ->setState($cod_endereco)
+                                    ->setCountry($countryId);
             
             # DADOS DE ENTREGA
             if(!$dadosEntrega)
@@ -355,8 +363,8 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
                                             ->setComplement($dadosEntrega->getStreet(3))
                                             ->setZipCode(Zend_Filter::filterStatic($dadosEntrega->getPostcode(), 'Digits'))
                                             ->setCity($dadosEntrega->getCity())
-                                            ->setState($region_entrega['code'])
-                                            ->setCountry('BRA');
+                                            ->setState($cod_entrega)
+                                            ->setCountry($countryId);
             
             # CRIA INSTANCIA DO PAGAMENTO
             $pagamento = $sale->payment($vl_total, $parcelas);
@@ -364,6 +372,7 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
             # ATRIBUI VALORES DE PAGAMENTO
             $pagamento->setType(Cielo_API_Payment::PAYMENTTYPE_CREDITCARD)
                         ->setInterest('ByMerchant')
+                        ->setCurrency($currency)
                         ->setCapture(Mage::getStoreConfig('payment/nitrocielo/payment_action')=='authorize_capture')
                         ->setAuthenticate(false)
                         ->creditCard($codseg, $bandeira)
@@ -383,47 +392,53 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
             if(!$pagamento->getPaymentId() || !$pagamento->getTid())
             {
                 # Grava no log do módulo
-                Mage::dispatchEvent('nitrocielo',
-                        array('payment_id' => '',
+                if(Mage::getStoreConfig('payment/nitrocielo/debug')){
+                    Mage::log( array('payment_id' => '',
                               'code'    => '9999',
                               'message' => 'Nenhum retorno recebido da API CIELO 3.0',
-                              'tid'     => ''));
+                              'tid'     => ''),null, 'nitrocielo.log');
+                }
 
                 Mage::throwException(Mage::helper('payment')->__('Problemas no pagamento via Cartão de Crédito, Você ainda pode selecionar uma outra forma de pagamento'));
             }
             
             # VALIDA A AUTORIZAÇÃO/CAPTURA DA TRANSAÇÃO
-            if($pagamento->getStatus()!== 1 && $pagamento->getStatus()!== 2 && $pagamento->getStatus()!== 12)
+            if($pagamento->getStatus()!= 1 && $pagamento->getStatus()!= 2 && $pagamento->getStatus()!= 12)
             {
                 # Grava no log do módulo
-                Mage::dispatchEvent('nitrocielo',
-                        array('payment_id' => (string) $pagamento->getPaymentId(),
+                if(Mage::getStoreConfig('payment/nitrocielo/debug')){
+                    Mage::log( array('payment_id' => (string) $pagamento->getPaymentId(),
                               'code'       => (string) $pagamento->getReturnCode(),
                               'status'     => (string) $pagamento->getStatus(),
                               'message'    => (string) $pagamento->getReturnMessage(),
-                              'tid'        => (string) $pagamento->getTid()));
+                              'tid'        => (string) $pagamento->getTid()),null, 'nitrocielo.log');
+                }
 
                 Mage::throwException(Mage::helper('payment')->__('Transação não autorizada pela operadora. Entre em contato conosco'));
             }
             
             # TRANSAÇÃO FOI AUTORIZADA/CAPTURADA
-            Mage::dispatchEvent('nitrocielo',
-                    array('payment_id'=> (string) $pagamento->getPaymentId(),
-                          'codigo'    => (string) $pagamento->getReturnCode(),
-                          'status'    => (string) $pagamento->getStatus(),
-                          'message'   => (string) $pagamento->getReturnMessage(),
-                          'tid'       => (string) $pagamento->getTid()));            
-            
+            if(Mage::getStoreConfig('payment/nitrocielo/debug')){
+                Mage::log( array('payment_id'=> (string) $pagamento->getPaymentId(),
+                      'codigo'    => (string) $pagamento->getReturnCode(),
+                      'status'    => (string) $pagamento->getStatus(),
+                      'message'   => (string) $pagamento->getReturnMessage(),
+                      'tid'       => (string) $pagamento->getTid()),null, 'nitrocielo.log');            
+            }
             # Atribui os valores
             $payment->setCcTransId($pagamento->getTid());
-            $payment->setQuotePaymentId($pagamento->getPaymentId());
+            //$payment->setQuotePaymentId($pagamento->getPaymentId());
+            $payment->setAdditionalInformation('payment_id',  (string) $pagamento->getPaymentId());
+            $payment->setAdditionalInformation('payment_links',  (string) json_encode($pagamento->getLinks()));
             $payment->setAdditionalInformation('autorizacao_codigo',  (string) $pagamento->getAuthorizationCode());
             $payment->setAdditionalInformation('autorizacao_mensagem',(string) $pagamento->getReturnMessage());
             $payment->setAdditionalInformation('autorizacao_valor',(string) ($pagamento->getAmount()/100));
 
             # Verifica se o retorno é status capturado. Se sim é pq captura é automática
-            if($pagamento->getReturnCode()==6)
+            if($pagamento->getReturnCode()==6){
+                $payment->setAdditionalInformation('captura_codigo', (string) $retorno->getReturnCode());
                 $payment->setAdditionalInformation('captura_mensagem', (string) $pagamento->getReturnMessage());
+            }
 
             $payment->save();
 
@@ -454,13 +469,15 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
      */
     public function capture(Varien_Object $payment, $amount)
     {
+
+        $payment_id = $payment->getAdditionalInformation('payment_id');
+
         # Se não for a área administrativa então a ação é autorizar e capturar automaticamente
-        if(!$payment->getCcTransId() || !$payment->getQuotePaymentId())
+        if(!$payment->getCcTransId() || !$payment_id)
         {
             $this->authorize($payment, $amount);
             return $this;
         }
-
         if(!$this->canCapture())
            Mage::throwException(Mage::helper('payment')->__('Esse pedido não pode ser capturado.'));
         
@@ -468,48 +485,65 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $cielo = Mage::getModel('nitrocielo/cielo');
         $cielo->setEnvironment();
 
-        $payment_id = $payment->getQuotePaymentId();
+        
         $valor      = number_format($amount, 2, '', '');
 
-        $retorno = $cielo->setCaptura($payment_id, $valor);
-
+        $retorno = $cielo->setCaptura($payment_id);
         # Verifica se o retorno é status capturado. Se sim é pq captura é automática
-        if($retorno->getReturnCode()!==6)
+        if(Mage::getStoreConfig('payment/nitrocielo/debug')){
+            Mage::log( $retorno->getReturnCode() ,null, 'nitrocielo.log');
+            Mage::log( $retorno->getReturnMessage() ,null, 'nitrocielo.log');
+            Mage::log( $retorno  ,null, 'nitrocielo.log');
+        }
+
+
+        if($retorno->getReturnCode()!=6)
         {
             # Grava no log do módulo
-            Mage::dispatchEvent('nitrocielo',
-                    array('payment_id' => '',
-                          'code'    => (string) $retorno->getReturnCode(),
-                          'message' => (string) $retorno->ReturnMessage(),
-                          'tid'     => ''));
+            if(Mage::getStoreConfig('payment/nitrocielo/debug')){
+                Mage::log( array('payment_id' => '',
+                      'code'    => (string) $retorno->getReturnCode(),
+                      'message' => (string) $retorno->getReturnMessage(),
+                      'tid'     => ''),null, 'nitrocielo.log');
+            }
 
             Mage::throwException(Mage::helper('payment')->__('Problemas ao capturar o pedido'));
         }
 
+        $payment->setAdditionalInformation('captura_codigo', (string) $retorno->getReturnCode());
         $payment->setAdditionalInformation('captura_mensagem', (string) $retorno->getReturnMessage());
         $payment->save();
 
         # TRANSAÇÃO FOI CAPTURADA
-        Mage::dispatchEvent('nitrocielo',
-                array('payment_id'=> (string) $payment->getQuotePaymentId(),
-                      'codigo'    => (string) $retorno->getReturnCode(),
-                      'status'    => (string) $retorno->getStatus(),
-                      'message'   => (string) $retorno->getReturnMessage(),
-                      'tid'       => (string) $payment->getCcTransId()));
+        if(Mage::getStoreConfig('payment/nitrocielo/debug')){
+            Mage::log( array('payment_id'=> (string) $payment_id,
+              'codigo'    => (string) $retorno->getReturnCode(),
+              'status'    => (string) $retorno->getStatus(),
+              'message'   => (string) $retorno->getReturnMessage(),
+              'tid'       => (string) $payment->getCcTransId()),null, 'nitrocielo.log');
+        }
 
         return $this;
     }
 
     public function cancelamento($observer)
     {
-        
-        $payment     = $observer->getEvent()->getPayment()->getOrder();
-        $payment_id  = $payment->getQuotePaymentId();
+
+        $payment     = $observer->getEvent()->getPayment();
+        $payment_id  = $payment->getAdditionalInformation('payment_id');
         $valor       = number_format($payment->getAmountAuthorized(), 2, '', '');
 
         # Caso o pedido não tenha sido finalizado pelo módulo cielo
-        if($payment->getMethod() != 'nitrocielo')
+        if($payment->getMethod() != 'nitrocielo'  ){
+            
             return true;
+        }
+
+         # Caso o pedido não tenha sido finalizado pelo módulo cielo
+        if( ! $payment_id ){
+             Mage::getSingleton('adminhtml/session')->addWarning( "Pagamento não cancelado na Cielo" ); 
+            return true;
+        }
         
         # ENVIA AS INFORMAÇÕES PARA INTEGRAÇÃO CIELO
         $cielo = Mage::getModel('nitrocielo/cielo');
@@ -518,14 +552,15 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $retorno = $cielo->setCancelamento($payment_id, $valor);
 
         # Verifica se o retorno é status capturado. Se sim é pq captura é automática
-        if($retorno->getStatus()!==10 || $retorno->getReturnCode()!==9)
+        if($retorno->getStatus()!=10 || $retorno->getReturnCode()!=9)
         {
             # Grava no log do módulo
-            Mage::dispatchEvent('nitrocielo',
-                    array('payment_id' => '',
-                          'code'    => (string) $retorno->getReturnCode(),
-                          'message' => (string) $retorno->ReturnMessage(),
-                          'tid'     => ''));
+            if(Mage::getStoreConfig('payment/nitrocielo/debug')){
+                Mage::log( array('payment_id' => '',
+                      'code'    => (string) $retorno->getReturnCode(),
+                      'message' => (string) $retorno->getReturnMessage(),
+                      'tid'     => ''),null, 'nitrocielo.log');
+            }
 
             Mage::throwException(Mage::helper('payment')->__('Problemas ao cancelar o pedido'));
         }
@@ -534,15 +569,18 @@ class Nitroecom_Cielo_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $payment->save();
 
         # TRANSAÇÃO FOI CAPTURADA
-        Mage::dispatchEvent('nitrocielo',
-                array('payment_id'=> (string) $payment->getQuotePaymentId(),
-                      'codigo'    => (string) $retorno->getReturnCode(),
-                      'status'    => (string) $retorno->getStatus(),
-                      'message'   => (string) $retorno->getReturnMessage(),
-                      'tid'       => (string) $payment->getCcTransId()));
+        if(Mage::getStoreConfig('payment/nitrocielo/debug')){
+            Mage::log( array('payment_id'=> (string) $payment->getQuotePaymentId(),
+              'codigo'    => (string) $retorno->getReturnCode(),
+              'status'    => (string) $retorno->getStatus(),
+              'message'   => (string) $retorno->getReturnMessage(),
+              'tid'       => (string) $payment->getCcTransId()),null, 'nitrocielo.log');
+        }
 
         return $this;
     }
 
-    public function estorno($observer) {   }
+    public function estorno($observer) { 
+             Mage::getSingleton('adminhtml/session')->addWarning( "Pagamento não Reembolsado na Cielo" );
+    }
 }
