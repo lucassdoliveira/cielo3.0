@@ -22,6 +22,6 @@ Checkout suportados
 Se você utiliza outro padrão de checkout diferente dos informados acima, sera necessario customizar o arquivo
 "app\design\frontend\base\default\layout\Nitroecom_Cielo.xml" informando o block do seu checkout.
 
-Para contratar a Instalação do Módulo em sua loja, acesse <a href="https://loja.nitroecom.com.br/instalac-o-modulo-cielo-api-3-0-magento">aqui</a>
+Para contratar a Instalação do Módulo em sua loja, acesse <a href="https://loja.nitroecom.com.br/instalacao-modulo-cielo-api-3-0-magento">aqui</a>
 
-# Nitroecom tecnologia e-commerce ltda (Grupo ROI)
+# Nitroecom
