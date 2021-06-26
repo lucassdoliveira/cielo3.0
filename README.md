@@ -25,3 +25,4 @@ Se você utiliza outro padrão de checkout diferente dos informados acima, sera 
 Para contratar a Instalação do Módulo em sua loja, acesse <a href="https://loja.nitroecom.com.br/instalacao-modulo-cielo-api-3-0-magento">aqui</a>
 
 # Nitroecom
+  <img src="https://loja.nitroecom.com.br/skin/frontend/nitroecom/one/images/logo.png" />
